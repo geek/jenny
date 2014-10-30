@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/geek/jenny",
   "dependencies": {
+    "sensors": "0.x.x",
     "serialport": "1.4.x",
     "wreck": "5.x.x"
   },

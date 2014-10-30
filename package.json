@@ -1,0 +1,31 @@
+{
+  "name": "jenny",
+  "version": "0.0.0",
+  "description": "Jenny tells a remote server whats happening with your MySensors connected via a serial port",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test-cov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geek/jenny.git"
+  },
+  "keywords": [
+    "mysensors",
+    "arduino"
+  ],
+  "author": "Wyatt Preul",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/geek/jenny/issues"
+  },
+  "homepage": "https://github.com/geek/jenny",
+  "dependencies": {
+    "serialport": "1.4.x",
+    "wreck": "5.x.x"
+  },
+  "devDependencies": {
+    "code": "1.x.x",
+    "lab": "5.x.x"
+  }
+}

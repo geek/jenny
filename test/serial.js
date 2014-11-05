@@ -38,6 +38,7 @@ describe('Serial', function () {
 
             expect(sensor.length).to.equal(1);
             expect(sensor[0].id).to.equal('12');
+            SerialPort.SerialPort = currentSerialPort;
             done();
         });
 

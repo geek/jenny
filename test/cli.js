@@ -59,5 +59,57 @@ describe('CLI', function () {
             });
         });
     });
+
+    it('monitors url for commands and writes them to serial port', function (done) {
+
+        var currentSerialPort = SerialPort.SerialPort;
+        var serial;
+
+        var server = new Hapi.Server(0);
+        server.route({ method: 'get', path: '/', handler: function (request, reply) {
+
+            reply([
+                {
+                    "id": "12",
+                    "childId": "6",
+                    "type": "presentation",
+                    "ack": false,
+                    "payload": "1.4",
+                    "subType": "S_LIGHT"
+                }
+            ]);
+        }});
+
+        server.start(function (err) {
+
+            expect(err).to.not.exist();
+            var options = {
+                url: 'http://localhost:' + server.info.port,
+                portname: '/test/port'
+            };
+
+            SerialPort.SerialPort = function (portname) {
+
+                Events.EventEmitter.call(this);
+                expect(portname).to.equal(options.portname);
+                serial = this;
+            };
+            Hoek.inherits(SerialPort.SerialPort, Events.EventEmitter);
+
+            SerialPort.SerialPort.prototype.open = function (callback) {
+
+                callback();
+            };
+
+            SerialPort.SerialPort.prototype.write = function (data, callback) {
+
+                expect(data).to.equal('12;6;0;0;3;1.4\n');
+                SerialPort.SerialPort = currentSerialPort;
+                done();
+            };
+
+            Cli.run(options, function () {});
+        });
+    });
 });
 

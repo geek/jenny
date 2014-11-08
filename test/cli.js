@@ -25,7 +25,7 @@ describe('CLI', function () {
         var serial;
 
         var server = new Hapi.Server(0);
-        server.route({ method: 'post', path: '/', handler: function (request, reply) {
+        server.route({ method: 'put', path: '/', handler: function (request, reply) {
 
             SerialPort.SerialPort = currentSerialPort;
             expect(request.payload[0].id).to.equal('12');

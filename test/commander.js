@@ -19,7 +19,7 @@ describe('Commander', function () {
     it('sends reported data to remote url', function (done) {
 
         var server = new Hapi.Server(0);
-        server.route({ method: 'post', path: '/', handler: function (request, reply) {
+        server.route({ method: 'put', path: '/', handler: function (request, reply) {
 
             expect(request.payload.test).to.equal('data');
             reply('ok');

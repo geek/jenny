@@ -38,7 +38,7 @@ All values are optional
 }
 ```
 
-* PUT `/radio/{id}/sensor/{childId}` - modify sensor values
+* PUT `/radio/{id}/sensor/{childId}` - modify sensor information.  All values are optional.
 ```json
 {
     "type": "",
@@ -49,6 +49,7 @@ All values are optional
 * POST `/log` - Create new log message.  Request is in the following form.
 ```json
 {
-    "message": ""
+    "message": "",
+    "time": ""
 }
 ```

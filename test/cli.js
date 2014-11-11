@@ -25,10 +25,10 @@ describe('CLI', function () {
         var serial;
 
         var server = new Hapi.Server(0);
-        server.route({ method: 'put', path: '/', handler: function (request, reply) {
+        server.route({ method: 'post', path: '/radio/{radioId}/sensor/{sensorId}/reading', handler: function (request, reply) {
 
             SerialPort.SerialPort = currentSerialPort;
-            expect(request.payload.id).to.equal('12');
+            expect(request.payload.value).to.equal('1.4');
             done();
         }});
 
@@ -55,7 +55,7 @@ describe('CLI', function () {
 
             Cli.run(options, function () {
 
-                serial.emit('data', '12;6;0;0;3;1.4\n');
+                serial.emit('data', '12;6;1;0;3;1.4\n');
             });
         });
     });

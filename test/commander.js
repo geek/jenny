@@ -16,23 +16,26 @@ var expect = Code.expect;
 
 describe('Commander', function () {
 
-    it('sends reported data to remote url', function (done) {
+    describe('createReading()', function () {
 
-        var server = new Hapi.Server(0);
-        server.route({ method: 'put', path: '/', handler: function (request, reply) {
+        it('sends reported data to remote url', function (done) {
 
-            expect(request.payload.test).to.equal('data');
-            reply('ok');
-        }});
+            var server = new Hapi.Server(0);
+            server.route({ method: 'post', path: '/radio/12/sensor/0/reading', handler: function (request, reply) {
 
-        server.start(function (err) {
+                expect(request.payload.type).to.equal('data');
+                reply('ok');
+            }});
 
-            expect(err).to.not.exist();
-            var commander = new Jenny.Commander('http://localhost:' + server.info.port);
-            commander.report({ test: 'data'}, function (err) {
+            server.start(function (err) {
 
                 expect(err).to.not.exist();
-                done();
+                var commander = new Jenny.Commander('http://localhost:' + server.info.port);
+                commander.createReading(12, 0, { type: 'data'}, function (err) {
+
+                    expect(err).to.not.exist();
+                    done();
+                });
             });
         });
     });

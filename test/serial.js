@@ -34,9 +34,9 @@ describe('Serial', function () {
         };
 
         var serial = new Jenny.Serial({ portname: 'test' });
-        serial.on('sensor', function (sensor) {
+        serial.on('sensor', function (data) {
 
-            expect(sensor.id).to.equal('12');
+            expect(data.radioId).to.equal('12');
             SerialPort.SerialPort = currentSerialPort;
             done();
         });

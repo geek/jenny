@@ -21,41 +21,28 @@ jenny -u http://site.com/path -p /serial/port
 ```
 
 * PUT `/radio/{id}` - Save data for radio.  Request is in the following form.
+All values are optional
 ```json
 {
-    "childId": "",
-    "value": "",
-    "type": "",
-    "time":
-}
-```
-
-* PUT `/radio/{id}` - Save device type.  Request is in the following form.
-```json
-{
-    "childId": "",
-    "device": ""
-}
-```
-
-* PUT `/radio/{id}` - Save name of sketch on radio.  Request is in the following form.
-```json
-{
-    "name": ""
-}
-```
-
-* PUT `/radio/{id}` - Save version of sketch on radio.  Request is in the following form.
-```json
-{
-    "version": ""
-}
-```
-
-* PUT `/radio/{id}` - Save battery level of radio.  Request is in the following form.
-```json
-{
+    "name": "",
+    "version": "",
     "battery": ""
+
+}
+```
+* POST `/radio/{id}/sensor/{childId}/reading` - Save sensor readings for this radio and sensor
+```json
+{
+    "value": "",
+    "time": ""
+}
+```
+
+* PUT `/radio/{id}/sensor/{childId}` - modify sensor values
+```json
+{
+    "type": "",
+    "name": ""
 }
 ```
 

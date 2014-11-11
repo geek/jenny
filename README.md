@@ -27,9 +27,9 @@ All values are optional
     "name": "",
     "version": "",
     "battery": ""
-
 }
 ```
+
 * POST `/radio/{id}/sensor/{childId}/reading` - Save sensor readings for this radio and sensor
 ```json
 {

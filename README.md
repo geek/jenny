@@ -33,6 +33,7 @@ All values are optional
 * POST `/radio/{id}/sensor/{childId}/reading` - Save sensor readings for this radio and sensor
 ```json
 {
+    "type": "",
     "value": "",
     "time": ""
 }

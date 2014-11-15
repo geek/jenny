@@ -21,11 +21,12 @@
   },
   "homepage": "https://github.com/geek/jenny",
   "dependencies": {
+    "bossy": "1.x.x",
     "hoek": "2.x.x",
     "sensors": "0.x.x",
     "serialport": "1.4.x",
     "wreck": "5.x.x",
-    "bossy": "1.x.x"
+    "ws": "^0.4.32"
   },
   "devDependencies": {
     "code": "1.x.x",

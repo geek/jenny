@@ -20,7 +20,8 @@ describe('Commander', function () {
 
         it('sends reported data to remote url', function (done) {
 
-            var server = new Hapi.Server(0);
+            var server = new Hapi.Server();
+            server.connection();
             server.route({ method: 'post', path: '/radio/12/sensor/0/reading', handler: function (request, reply) {
 
                 expect(request.payload.type).to.equal('data');
@@ -30,8 +31,8 @@ describe('Commander', function () {
             server.start(function (err) {
 
                 expect(err).to.not.exist();
-                var commander = new Jenny.Commander('http://localhost:' + server.info.port);
-                commander.createReading(12, 0, { type: 'data'}, function (err) {
+                var jenny = new Jenny('http://localhost:' + server.info.port);
+                jenny.createReading(12, 0, { type: 'data'}, function (err) {
 
                     expect(err).to.not.exist();
                     done();

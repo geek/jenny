@@ -1,6 +1,6 @@
 // Load modules
 
-var Events = require('events');
+var Stream = require('stream');
 var Code = require('code');
 var Hoek = require('hoek');
 var Hapi = require('hapi');
@@ -24,7 +24,8 @@ describe('CLI', function () {
         var currentSerialPort = SerialPort.SerialPort;
         var serial;
 
-        var server = new Hapi.Server(0);
+        var server = new Hapi.Server();
+        server.connection();
         server.route({ method: 'post', path: '/radio/{radioId}/sensor/{sensorId}/reading', handler: function (request, reply) {
 
             SerialPort.SerialPort = currentSerialPort;
@@ -42,16 +43,28 @@ describe('CLI', function () {
 
             SerialPort.SerialPort = function (portname) {
 
-                Events.EventEmitter.call(this);
+                Stream.Duplex.call(this);
                 expect(portname).to.equal(options.portname);
+                this.passThrough = new Stream.PassThrough();
                 serial = this;
             };
-            Hoek.inherits(SerialPort.SerialPort, Events.EventEmitter);
+            Hoek.inherits(SerialPort.SerialPort, Stream.Duplex);
 
             SerialPort.SerialPort.prototype.open = function (callback) {
 
                 callback();
             };
+
+            SerialPort.SerialPort.prototype._read = function (size) {
+
+                this.passThrough._read(size);
+            };
+
+            SerialPort.SerialPort.prototype._write = function (chunk, encoding, callback) {
+
+                this.passThrough._write(chunk, encoding, callback);
+            };
+
 
             Cli.run(options, function () {
 

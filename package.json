@@ -1,6 +1,6 @@
 {
   "name": "jenny",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Jenny tells a remote server whats happening with your MySensors connected via a serial port",
   "main": "index.js",
   "scripts": {

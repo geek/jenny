@@ -26,7 +26,7 @@ describe('CLI', function () {
 
         var server = new Hapi.Server();
         server.connection();
-        server.route({ method: 'post', path: '/radio/{radioId}/sensor/{sensorId}/reading', handler: function (request, reply) {
+        server.route({ method: 'post', path: '/board/{boardId}/{addonId}/reading', handler: function (request, reply) {
 
             SerialPort.SerialPort = currentSerialPort;
             expect(request.payload.value).to.equal('1.4');
@@ -37,7 +37,7 @@ describe('CLI', function () {
 
             expect(err).to.not.exist();
             var options = {
-                url: 'http://localhost:' + server.info.port,
+                url: 'http://127.0.0.1:' + server.info.port,
                 portname: '/test/port'
             };
 

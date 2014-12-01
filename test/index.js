@@ -22,7 +22,7 @@ describe('Commander', function () {
 
             var server = new Hapi.Server();
             server.connection();
-            server.route({ method: 'post', path: '/radio/12/sensor/0/reading', handler: function (request, reply) {
+            server.route({ method: 'post', path: '/board/12/0/reading', handler: function (request, reply) {
 
                 expect(request.payload.type).to.equal('data');
                 reply('ok');

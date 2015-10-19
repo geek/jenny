@@ -3,6 +3,7 @@
 var Code = require('code');
 var Hapi = require('hapi');
 var Lab = require('lab');
+var Nes = require('nes');
 var Jenny = require('../');
 
 
@@ -14,14 +15,18 @@ var it = lab.it;
 var expect = Code.expect;
 
 
-describe('Commander', function () {
+describe('createReading()', function () {
 
-    describe('createReading()', function () {
+    it('sends reported data to remote url', function (done) {
 
-        it('sends reported data to remote url', function (done) {
+        var server = new Hapi.Server();
+        server.connection({ port: 0 });
 
-            var server = new Hapi.Server();
-            server.connection();
+        server.register(Nes, function (err) {
+
+            expect(err).to.not.exist();
+
+            server.subscription('/command');
             server.route({ method: 'post', path: '/board/12/0/reading', handler: function (request, reply) {
 
                 expect(request.payload.type).to.equal('data');
@@ -32,10 +37,13 @@ describe('Commander', function () {
 
                 expect(err).to.not.exist();
                 var jenny = new Jenny('http://localhost:' + server.info.port);
-                jenny.createReading(12, 0, { type: 'data'}, function (err) {
+                jenny.connect(function (err) {
 
-                    expect(err).to.not.exist();
-                    done();
+                    jenny.createReading(12, 0, { type: 'data' }, function (err) {
+
+                        expect(err).to.not.exist();
+                        done();
+                    });
                 });
             });
         });

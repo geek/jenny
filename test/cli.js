@@ -5,6 +5,7 @@ var Code = require('code');
 var Hoek = require('hoek');
 var Hapi = require('hapi');
 var Lab = require('lab');
+var Nes = require('nes');
 var SerialPort = require('serialport');
 var Cli = require('../lib/cli');
 
@@ -25,52 +26,63 @@ describe('CLI', function () {
         var serial;
 
         var server = new Hapi.Server();
-        server.connection();
-        server.route({ method: 'post', path: '/board/{boardId}/{addonId}/reading', handler: function (request, reply) {
-
-            SerialPort.SerialPort = currentSerialPort;
-            expect(request.payload.value).to.equal('1.4');
-            done();
-        }});
-
-        server.start(function (err) {
+        server.connection({ port: 0 });
+        server.register(Nes, function (err) {
 
             expect(err).to.not.exist();
-            var options = {
-                url: 'http://127.0.0.1:' + server.info.port,
-                portname: '/test/port'
+
+            var createReadingHandler = function (request, reply) {
+
+                SerialPort.SerialPort = currentSerialPort;
+                expect(request.payload.value).to.equal('1.4');
+                done();
             };
 
-            SerialPort.SerialPort = function (portname) {
+            server.route({
+                method: 'post',
+                path: '/board/{boardId}/{addonId}/reading',
+                handler: createReadingHandler
+            });
 
-                Stream.Duplex.call(this);
-                expect(portname).to.equal(options.portname);
-                this.passThrough = new Stream.PassThrough();
-                serial = this;
-            };
-            Hoek.inherits(SerialPort.SerialPort, Stream.Duplex);
+            server.subscription('/command');
 
-            SerialPort.SerialPort.prototype.open = function (callback) {
+            server.start(function (err) {
 
-                callback();
-            };
+                expect(err).to.not.exist();
+                var options = {
+                    url: 'http://127.0.0.1:' + server.info.port,
+                    portname: '/test/port'
+                };
 
-            SerialPort.SerialPort.prototype._read = function (size) {
+                SerialPort.SerialPort = function (portname) {
 
-                this.passThrough._read(size);
-            };
+                    Stream.Duplex.call(this);
+                    expect(portname).to.equal(options.portname);
+                    this.passThrough = new Stream.PassThrough();
+                    serial = this;
+                };
+                Hoek.inherits(SerialPort.SerialPort, Stream.Duplex);
 
-            SerialPort.SerialPort.prototype._write = function (chunk, encoding, callback) {
+                SerialPort.SerialPort.prototype.open = function (callback) {
 
-                this.passThrough._write(chunk, encoding, callback);
-            };
+                    callback();
+                };
 
+                SerialPort.SerialPort.prototype._read = function (size) {
 
-            Cli.run(options, function () {
+                    this.passThrough._read(size);
+                };
 
-                serial.emit('data', '12;6;1;0;3;1.4\n');
+                SerialPort.SerialPort.prototype._write = function (chunk, encoding, callback) {
+
+                    this.passThrough._write(chunk, encoding, callback);
+                };
+
+                Cli.run(options, function () {
+
+                    serial.emit('data', '12;6;1;0;3;1.4\n');
+                });
             });
         });
     });
 });
-
